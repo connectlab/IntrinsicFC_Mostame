@@ -12,9 +12,8 @@ x_fft_angle=angle(x_fft);
 temp=x_fft_angle(1:1+floor(0.5*size(x_fft_angle,1)),:); [s1 s2]=size(temp);
 
 % permute phase
-% temp=temp(randperm(numel(temp))); 
 temp=2* pi * rand(s1, s2) - pi; 
-% temp=reshape(temp,s1,s2);
+temp=reshape(temp,s1,s2);
 % assign the permuted phase
 x_fft_angle_perm=x_fft_angle;
 x_fft_angle_perm(1:s1,:)=temp;
