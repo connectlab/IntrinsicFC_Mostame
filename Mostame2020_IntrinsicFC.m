@@ -42,34 +42,15 @@ function [] = Main_rest(path_main, path_root, path_results_rest, freq, i_sub, Ta
 %% ----------------- load data & extract configurations
 load Subjects
 subject=Subjects{i_sub};
-if i_sub<=10 % ------------------------------ Stanford data exclusion
-    task='RestEyesOpen';
-    if i_sub==10
-        task='RestEyesClosed';
-    end
-    [~, edata, electrodes_coordinate, BadElecs]=load_clean_data(path_root,subject,task,1);
-else
-    cd([path_root '\' subject])
-    load(sprintf('edata_Stanford_%s_%s.mat',Task, subject))
-end % ------------------------------ Stanford data exclusion
+cd([path_root '\' subject])
+load(sprintf('edata_Stanford_%s_%s.mat',Task, subject))
 % Extract Data specifics
 numelec=numel(edata.label);
 Fs=edata.fsample;
 
 %% calculate electrode distance
-if i_sub<=10 % ------------------------------ Stanford data exclusion
-    load('BadElecs');
-    dist_electrodes=nan(numelec,numelec);
-    addpath('...');
-    fil=xlsread('MNI_Coordinates', subject);
-    if size(fil,2)>3
-        fil(:,1:2)=[];
-    end
-    fil(BadElecs,:)=[]; fil(numelec+1:end,:)=[];
-else
-    cd([path_root '\' subject])
-    load(sprintf('electrodes_%s_%s.mat', Task, subject)); fil=electrodes;
-end % ------------------------------ Stanford data exclusion
+cd([path_root '\' subject])
+load(sprintf('electrodes_%s_%s.mat', Task, subject)); fil=electrodes;
 cd(path_main)
 
 for i=1:numelec
@@ -122,17 +103,12 @@ conn_Amp_static=nanmean(conn_Amp,3);
 
 %% ----------------- save data
 clear oldfolder temp temp1 temp2
-if i_sub<=10
+if strcmp(Task,'fixation_pwrlaw') || strcmp(Task,'fixation_PAC')
     cd(path_results_rest);
-    txt=sprintf('FC_ImC_Rest_%s_Freq%d.mat',subject,freq);
+    txt=sprintf('FC_ImC_%s_%s_freq%d.mat',Task,subject,freq);
 else
-    if strcmp(Task,'fixation_pwrlaw') || strcmp(Task,'fixation_PAC')
-        cd(path_results_rest);
-        txt=sprintf('FC_ImC_%s_%s_freq%d.mat',Task,subject,freq);
-    else
-        cd('...');
-        txt=sprintf('FC_ImC_%s_%s_freq%d.mat',Task,subject,freq);
-    end
+    cd('...');
+    txt=sprintf('FC_ImC_%s_%s_freq%d.mat',Task,subject,freq);
 end
 save(txt,'-v7.3')
 cd(path_main);
@@ -153,17 +129,13 @@ switch Task
     case 'speech_basic'
         Tlim=[-1.5 1.5];
 end
-if i_sub<=10 % ------------------------------ Stanford data exclusion
-    [edata,~,~,~]=load_clean_data(path_root,subject,Task,1);
-else
-    switch Task
-        case 'Motor_Stanford'
-            stim_code=11;
-            load(sprintf('edata_Stanford_%s_Stim%d_%s.mat', Task, stim_code, subject));
-        case 'speech_basic'
-            load(sprintf('edata_Stanford_%s_%s.mat', Task, subject));
-    end
-end % ------------------------------ Stanford data exclusion
+switch Task
+    case 'Motor_Stanford'
+        stim_code=11;
+        load(sprintf('edata_Stanford_%s_Stim%d_%s.mat', Task, stim_code, subject));
+    case 'speech_basic'
+        load(sprintf('edata_Stanford_%s_%s.mat', Task, subject));
+end
 
 % Extract Data specifics
 numelec=numel(edata.label);
@@ -172,19 +144,8 @@ Electrodes=edata.label;
 Fs=edata.fsample;
 
 %% calculate electrode distance
-if i_sub<=10 % ------------------------------ Stanford data exclusion
-    load('BadElecs');
-    dist_electrodes=nan(numelec,numelec);
-    addpath('...');
-    fil=xlsread('MNI_Coordinates', subject);
-    if size(fil,2)>3
-        fil(:,1:2)=[];
-    end
-    fil(BadElecs,:)=[]; fil(numelec+1:end,:)=[];
-else
-    cd([path_root '\' subject])
-    load(sprintf('electrodes_%s_%s.mat',Task, subject)); fil=electrodes; clear electrodes_text
-end % ------------------------------ Stanford data exclusion
+cd([path_root '\' subject])
+load(sprintf('electrodes_%s_%s.mat',Task, subject)); fil=electrodes; clear electrodes_text
 cd(path_main)
 
 for i=1:numelec
