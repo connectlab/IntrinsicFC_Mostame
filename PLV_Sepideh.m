@@ -45,16 +45,8 @@ while starttime + Win_step/2<=t(end)
                 % extract raw phases
                 Phases=[];
                 Phases(1,:)=angle(hilbert(x_bp_trim)); Phases(2,:)=angle(hilbert(y_bp_trim));
-                % smoothen phases
+                % unwrap phases
                 for elec=1:2
-                        %             ph=Phases(elec,:);
-                        %             for time=1:length(ph)-1
-                        %                 if ph(time+1)-ph(time)>2.4
-                        %                     ph(time+1:end)=ph(time+1:end)-2*pi;
-                        %                 elseif ph(time+1)-ph(time)<-2.4
-                        %                     ph(time+1:end)=ph(time+1:end)+2*pi;
-                        %                 end
-                        %             end
                         Phases(elec, :)= unwrap( Phases(elec,:) );
                 end
                 %         clear ph
@@ -71,9 +63,6 @@ while starttime + Win_step/2<=t(end)
         end
         starttime=starttime+Time_step;
 end
-% smooth curves
-% [B,A]=cheby2(3,20,2*0.3*Time_step); temp1=filtfilt(B,A,PLV); temp1=temp1/max(abs(temp1))*max(abs(PLV));
-% PLV=temp1; clear temp1;
 % add nan values to the tails
 temp=[]; temp=floor(t(end))/Time_step;
 temp=temp-length(PLV);
