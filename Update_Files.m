@@ -15,9 +15,6 @@ switch Tasks
     case 'Rest'
         cd('...');
         txt=sprintf('FC_Rest_%s_Freq%d.mat',subject,freq);
-    case 'CRM'
-        cd('...');
-        txt=sprintf('AmpPhCorr_%s_Cond1_Freq%dto%d_smooth_abs.mat',subject,Freqrange(1),Freqrange(2));
     case 'Motor_Stanford'
         cd('...');
         txt=sprintf('AmpPhCorr_%s_Cond1_Freq%dto%d_smooth_abs.mat',subject,Freqrange(1),Freqrange(2));
@@ -33,9 +30,6 @@ switch Tasks
     case 'Rest'
         temp=cd('...');
         txt=sprintf('FC_Rest_%s_Freq%d.mat',subject,freq);
-    case 'CRM'
-        temp=cd('...');
-        txt=sprintf('FC_%s_%s_freq%d.mat',Tasks,subject,freq);
     case 'Motor_Stanford'
         cd('...');
         txt=sprintf('AmpPhCorr_%s_Cond1_Freq%dto%d_smooth_abs.mat',subject,Freqrange(1),Freqrange(2));
